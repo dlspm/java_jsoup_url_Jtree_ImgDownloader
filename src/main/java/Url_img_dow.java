@@ -12,6 +12,7 @@
 
 
 //import static PttGossiping.GetHtmlResouceByURL;
+
 import com.github.abola.crawler.CrawlerPack;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -62,9 +63,9 @@ import org.jsoup.Jsoup;
 public class Url_img_dow extends JFrame implements ActionListener  {
 
     private JPanel p, jPanel1, pp, ppp;
-    JButton Btndow, Btnimgpath, Btnimgpaths, Btndel, Btnnew, Btnnews ;
+    JButton Btndow, Btnimgpath, Btnimgpaths, Btndel, Btnnew, Btnnews, Btnparent ;
     JLabel Lablabel, Lablabels;
-    JTextField theTextField, theTextFields;
+    JTextField theTextField, theTextFields, JTextFieldparent;
     Container c = this.getContentPane();
     String strimg;
 //    JTree tree;
@@ -105,8 +106,8 @@ public class Url_img_dow extends JFrame implements ActionListener  {
 //        }
 //        int count = readfile(dict);
 
-//        readimgpath();
-        DefaultMutableTreeNode[] file = new DefaultMutableTreeNode[readfile(dict)];
+        root.add(new DefaultMutableTreeNode("img"));
+        DefaultMutableTreeNode[] file = new DefaultMutableTreeNode[readfile(dict, "imgpath.txt")];
 //        root = new DefaultMutableTreeNode("img");
         
         
@@ -157,7 +158,7 @@ public class Url_img_dow extends JFrame implements ActionListener  {
                 System.out.println("" + st);
                 System.out.println(dict.get(st));
                 
-                if(st != "img"){
+                if(st != "img" && dict.get(st) != null && dict.get(st) != ""){
                     try {
     //                    URL url = new URL("https://d2hsbzg80yxel6.cloudfront.net/images/69511/medium/16639037694fbdf3c729b5b.jpg");
                         URL url;
@@ -192,14 +193,39 @@ public class Url_img_dow extends JFrame implements ActionListener  {
         ppp.add(Lablabel);
 //        Btnimgpath.addActionListener(this);
         theTextField = new JTextField(20);
+        theTextField = new JTextField(20);
+        theTextField.setText("IG Punch URL");
+//        theTextField.addFocusListener(new FocusAdapter() {
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//                theTextField.setText("");
+//            }
+//            @Override
+//            public void focusLost(FocusEvent e) {
+//                theTextField.setText("IG Punch URL");
+//            }
+//        });
         ppp.add(theTextField);
 
 //        Btnimgpaths = new JButton("載入整個網址");
-        Lablabels = new JLabel("載入單個網址");
+        Lablabels = new JLabel("載入整個網址");
         ppp.add(Lablabels);
 //        Btnimgpaths.addActionListener(this);
         theTextFields = new JTextField(20);
+        theTextFields.setText("IG URL");
+//        theTextFields.addFocusListener(new FocusAdapter() {
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//                theTextFields.setText("");
+//            }
+//            @Override
+//            public void focusLost(FocusEvent e) {
+//                theTextFields.setText("IG URL");
+//            }
+//        });
         ppp.add(theTextFields);
+        
+        
 
         c.add(ppp, BorderLayout.NORTH);
         
@@ -213,18 +239,25 @@ public class Url_img_dow extends JFrame implements ActionListener  {
         pp.setLayout(new FlowLayout());
         Btndow = new JButton("下載");
         Btnnew = new JButton("新增單個");
-        Btnnews = new JButton("新增整個"); 
+        Btnnews = new JButton("新增整個");
+        Btnparent = new JButton("新增資料夾");
+        JTextFieldparent = new JTextField(20);
+        JTextFieldparent.setText("輸入資料夾名稱");
         Btndel = new JButton("刪除");
         
         Btndow.addActionListener(this);
         Btndel.addActionListener(this);
         Btnnew.addActionListener(this);
         Btnnews.addActionListener(this);
-        
+        Btnparent.addActionListener(this);
+//        JTextFieldparent.addMouseListener((MouseListener) this);
+
         pp.add(Btndow, BorderLayout.SOUTH);
         pp.add(Btndel, BorderLayout.SOUTH);
         pp.add(Btnnew, BorderLayout.SOUTH);
         pp.add(Btnnews, BorderLayout.SOUTH);
+        pp.add(Btnparent, BorderLayout.SOUTH);
+        pp.add(JTextFieldparent, BorderLayout.SOUTH);
 //        pp.repaint();
         c.add(pp, BorderLayout.SOUTH);
 
@@ -269,7 +302,8 @@ public class Url_img_dow extends JFrame implements ActionListener  {
 //                NewNode(sp[4]+".jpg");
                 sp[4]+= ".jpg";
                 NewNode(sp[4]);
-                dict.put(sp[4], strurlpath);
+                Putdata(sp[4], strurlpath);
+//                dict.put(sp[4], strurlpath);
             
             }catch (Exception ex) {
                 Logger.getLogger(Url_img_dow.class.getName()).log(Level.SEVERE, null, ex);
@@ -312,7 +346,10 @@ public class Url_img_dow extends JFrame implements ActionListener  {
 //                NewNode(sp[4]+".jpg");
                 sp[4] += ".jpg";
                 NewNode(sp[4]);
-                dict.put(sp[4], strurlpath);
+                Putdata(sp[4], strurlpath);
+//                dict.put(sp[4], strurlpath);
+                
+                
 
             } catch (Exception ex) {
                 Logger.getLogger(Url_img_dow.class.getName()).log(Level.SEVERE, null, ex);
@@ -320,8 +357,77 @@ public class Url_img_dow extends JFrame implements ActionListener  {
 
 //            NewNode("Bd-Mw5iBVak.jpg");
 //            dict.put("Bd-Mw5iBVak.jpg", "https://instagram.fkhh1-1.fna.fbcdn.net/vp/7571e60baa52901c56371ff627eb24af/5AEC071A/t51.2885-15/e35/26151420_457673181297052_3050063388802547712_n.jpg");
-        } 
+        }else if(e.getSource() == Btnnews){
+            try{
+                String url = theTextFields.getText();
+                System.out.println(theTextFields.getText());
+                
+                
+                String encoding = "gb2312";
+                //1.根据网络和页面的编码集 抓取网页的源代码
+                String htmlResouce = PttGossiping.GetHtmlResouceByURL(url, encoding); //GetHtmlResouceByURL() 會 return String 整個 html/XML  回來
+                //System.out.println(htmlResouce);
+
+                //2.解析网页的源代码 jsoup jar包
+                org.jsoup.nodes.Document document = Jsoup.parse(htmlResouce, "UTF-8");
+                
+                //讀入新的檔案
+                PttGossiping.Get_instagram_imgurl(document, url, "newimgpath.txt"); //寫入到新的檔案
+                readfile(dict, "newimgpath.txt"); //讀取新的檔案
+                
+                
+                
+                
+            }catch (Exception ex) {
+                Logger.getLogger(Url_img_dow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        
+        }else if (e.getSource() == Btnparent) {
+
+            String parentfolder = JTextFieldparent.getText();
+            System.out.println(parentfolder);
+            Newparentnode(parentfolder);
+        }
             
+    }
+    
+    public void Newparentnode(String name){
+        try {
+            System.out.println("parentnode");
+            Putdata(name, null);
+            DefaultMutableTreeNode parentNode = null;
+            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(name);
+            newNode.setAllowsChildren(true);
+            TreePath parentPath = m_tree.getSelectionPath();
+
+            //取得新節點的父節點
+            parentNode = (DefaultMutableTreeNode) m_tree.getLastSelectedPathComponent();
+            if (parentNode == null) {
+                return;
+            }
+
+            //由DefaultTreeModel的insertNodeInto（）方法增加新節點
+            m_model.insertNodeInto(newNode, parentNode, parentNode.getChildCount());
+            newNode.add( new DefaultMutableTreeNode(name));
+            root.add(newNode);
+//                root.add(newNode);
+            //tree的scrollPathToVisible()方法在使Tree會自動展開文件夾以便顯示所加入的新節點。若沒加這行則加入的新節點
+            //會被 包在文件夾中，你必須自行展開文件夾才看得到。
+            m_tree.scrollPathToVisible(new TreePath(newNode.getPath()));
+
+            m_tree.setSelectionPath(parentPath);
+
+        } catch (Exception ex) {
+            Logger.getLogger(Url_img_dow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+//        NewNode("Bd-Mw5iBVak.jpg");
+        Putdata(name, "");
+//        Putdata("Bd-Mw5iBVak.jpg", "https://instagram.fkhh1-1.fna.fbcdn.net/vp/7571e60baa52901c56371ff627eb24af/5AEC071A/t51.2885-15/e35/26151420_457673181297052_3050063388802547712_n.jpg");
+//        dict.put("Bd-Mw5iBVak.jpg", "https://instagram.fkhh1-1.fna.fbcdn.net/vp/7571e60baa52901c56371ff627eb24af/5AEC071A/t51.2885-15/e35/26151420_457673181297052_3050063388802547712_n.jpg");
+
+    
     }
     
     public void NewNode(String name){
@@ -347,7 +453,7 @@ public class Url_img_dow extends JFrame implements ActionListener  {
                 m_tree.scrollPathToVisible(new TreePath(newNode.getPath()));
                 
 
-
+                m_tree.setSelectionPath(parentPath);
 
             }catch (Exception ex) {
                 Logger.getLogger(Url_img_dow.class.getName()).log(Level.SEVERE, null, ex);
@@ -357,7 +463,7 @@ public class Url_img_dow extends JFrame implements ActionListener  {
     public void readimgpath() throws MalformedURLException{
 //        root = new DefaultMutableTreeNode("img");
 //        tree.removeAll();
-        if(readfile(dict)>0){
+        if(readfile(dict, "imgpath.txt")>0){
             
             DefaultMutableTreeNode selNode = (DefaultMutableTreeNode) m_tree
                     .getLastSelectedPathComponent();
@@ -417,25 +523,30 @@ public class Url_img_dow extends JFrame implements ActionListener  {
 //
 //    }
 
-    public int readfile(ConcurrentHashMap dict) throws MalformedURLException {
+    public int readfile(ConcurrentHashMap dict, String filename) throws MalformedURLException {
 
         //圖檔
-        int count = 0;
+        int count = 0, num=0;
         try {
-            FileReader fr = new FileReader("imgpath.txt");
+            FileReader fr = new FileReader(filename);
             BufferedReader fin = new BufferedReader(fr);
             String[] data = new String[1];
             while (fin.ready()) {
                 count++;
-                if (count > data.length) {
+                if (count >= data.length) {
                     String[] temp = data;//把原有的arry 指到temp
                     data = new String[count];//講原有的宣告成新的並給予新的長度
                     for (int i = 0; i < temp.length; i++) {
                         data[i] = temp[i];//把temp值塞到新的
                         String sp[] = new String[10];
                         sp = PttGossiping.split_line(data[i], ",");
+                        Putdata(sp[0], sp[1]);
+//                        if(filename == "newimgpath.txt" && dict.get(sp[0]) == null){
+//                            NewNode(sp[0]);
+//                            num++;
+//                        }
                         
-                        dict.put(sp[0], sp[1]);
+//                        dict.put(sp[0], sp[1]);
 //                        NewNode(sp[0]);
 //                        System.out.println(show_split_line);
                     }
@@ -452,7 +563,8 @@ public class Url_img_dow extends JFrame implements ActionListener  {
 //                    System.out.println(show_split_line + "," + s);
                     sp[k++] = s;
                 }
-                dict.put(sp[0], sp[1]);
+                Putdata(sp[0], sp[1]);
+//                dict.put(sp[0], sp[1]);
 
             }
             fin.close();
@@ -478,6 +590,20 @@ public class Url_img_dow extends JFrame implements ActionListener  {
         }
         fos.close();
         System.out.println( "Dow/" + strimg + "Down is OK");
+
+    }
+    
+    public void Putdata(String skey, String svalue) {
+        if (dict.get(skey) == null) {
+            if (skey.indexOf(".jpg") != -1) {
+                NewNode(skey);
+                dict.put(skey, svalue);
+            } else {
+                dict.put(skey, "");
+            }
+        }else{
+            System.out.println("已經載過");
+        }
 
     }
     

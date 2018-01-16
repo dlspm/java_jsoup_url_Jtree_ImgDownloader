@@ -59,7 +59,7 @@ class PttGossiping {
         
         
 //        Get_facebook_imgurl(document, url);
-//        Get_instagram_imgurl(document,url);
+//        Get_instagram_imgurl(document, url, "imgpath.txt");
         //3.通过调剂语句进行筛选信息
         
 //        Get_imgsql_imgurl(document, url);
@@ -94,7 +94,7 @@ class PttGossiping {
     }
     
     
-    public static void Get_imgsql_imgurl(Document document, String url){
+    public static void Get_imgsql_imgurl(Document document, String url, String filename){
         //meta, content
         int n=0;
         Elements elements = document.getElementsByTag("img");  
@@ -117,14 +117,14 @@ class PttGossiping {
             
     }
     
-    public static void Get_instagram_imgurl(Document document, String url){
+    public static void Get_instagram_imgurl(Document document, String url, String filename){
         //meta, content
         int n=0;
         Elements elements = document.getElementsByTag("a");  
         // 回傳元素 (element) 指定標籤的後代集合物件 (object) 。
         
         //輸出圖片路徑到 imgpath.txt
-        File fpath = new File("imgpath.txt");
+        File fpath = new File(filename);
 //        FileOutputStream o = new FileOutputStream(fpath);
 
         try {
