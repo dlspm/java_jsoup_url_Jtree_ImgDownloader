@@ -106,7 +106,7 @@ class PttGossiping {
             System.out.println("attr:" + imgSrc);
             //下载到本地文件夹中
             
-            downImgs(imgSrc, imgSrc.substring(imgSrc.length() - 12, imgSrc.length()));
+//            downImgs(imgSrc, imgSrc.substring(imgSrc.length() - 12, imgSrc.length()));
             if (n == 3) {
                 break;
             } else {
@@ -177,7 +177,7 @@ class PttGossiping {
                     byte[] bimgpath = (filename + ".jpg," + imgSrc+"\n").getBytes();
                     
                     out.write(bimgpath);
-                    downImgs(imgSrc, filename);
+//                    downImgs(imgSrc, filename);
                     break;
                 }
             }

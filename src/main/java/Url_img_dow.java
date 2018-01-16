@@ -354,6 +354,20 @@ public class Url_img_dow extends JFrame implements ActionListener  {
             String parentfolder = JTextFieldparent.getText();
             System.out.println(parentfolder);
             Newparentnode(parentfolder);
+        }else if(e.getSource() == Btndel){
+        
+            TreePath treepath = m_tree.getSelectionPath();
+            if (treepath != null) {
+                //下面兩行取得選取節點的父節點.
+                DefaultMutableTreeNode selectionNode = (DefaultMutableTreeNode) treepath.getLastPathComponent();
+                TreeNode parent = (TreeNode) selectionNode.getParent();
+                if (parent != null) {
+                    //由DefaultTreeModel的removeNodeFromParent()方法刪除節點，包含它的子節點。
+                    m_model.removeNodeFromParent(selectionNode);
+                    
+                }
+            }
+            
         }
             
     }
@@ -397,7 +411,7 @@ public class Url_img_dow extends JFrame implements ActionListener  {
     
     public void NewNode(String name){
         try {
-                System.out.println("Btndel");
+                System.out.println("NewNode");
 
                 DefaultMutableTreeNode parentNode = null;
                 DefaultMutableTreeNode nNode = new DefaultMutableTreeNode(name);
@@ -615,7 +629,7 @@ public class Url_img_dow extends JFrame implements ActionListener  {
                     byte[] bimgpath = (filename + ".jpg," + imgSrc+"\n").getBytes();
                     
                     out.write(bimgpath);
-                    PttGossiping.downImgs(imgSrc, filename);
+//                    PttGossiping.downImgs(imgSrc, filename);
                     break;
                 }
             }
