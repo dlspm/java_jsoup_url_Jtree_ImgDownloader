@@ -63,7 +63,7 @@ import org.jsoup.Jsoup;
 public class Url_img_dow extends JFrame implements ActionListener  {
 
     private JPanel p, jPanel1, pp, ppp;
-    JButton Btndow, Btnimgpath, Btnimgpaths, Btndel, Btnnew, Btnnews, Btnparent ;
+    JButton Btndow, Btndel, Btnnew, Btnnews, Btnparent ;
     JLabel Lablabel, Lablabels;
     JTextField theTextField, theTextFields, JTextFieldparent;
     Container c = this.getContentPane();
@@ -280,42 +280,8 @@ public class Url_img_dow extends JFrame implements ActionListener  {
             } catch (Exception ex) {
                 Logger.getLogger(Url_img_dow.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else if(e.getSource() == Btnimgpath){
-            try {
-                
-                String url = theTextField.getText();
-                System.out.println(theTextField.getText());
-                
-                String sp[] = new String[10];
-                sp = PttGossiping.split_line(url, "/");
-                
-                File fpath = new File("imgpath.txt");
-                FileOutputStream out = new FileOutputStream(fpath, true);
-                
-                String strurlpath = Get_instagram_imgdown(url, sp[4], out);
-//                dict.put(sp[4], strurlpath);
-                
-                out.close();
-                
-                
-//                root.removeAllChildren();
-//                NewNode(sp[4]+".jpg");
-                sp[4]+= ".jpg";
-                NewNode(sp[4]);
-                Putdata(sp[4], strurlpath);
-//                dict.put(sp[4], strurlpath);
-            
-            }catch (Exception ex) {
-                Logger.getLogger(Url_img_dow.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }else if(e.getSource() == Btnimgpaths){
-            
-            
         }else if(e.getSource() == Btnnew){
         
-//            String url = theTextField.getText();
-//            System.out.println(theTextField.getText());
-//            root.removeAllChildren();
             
 //                String encoding = "gb2312";
 //                //1.根据网络和页面的编码集 抓取网页的源代码
@@ -434,8 +400,8 @@ public class Url_img_dow extends JFrame implements ActionListener  {
                 System.out.println("Btndel");
 
                 DefaultMutableTreeNode parentNode = null;
-                DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(name);
-                newNode.setAllowsChildren(true);
+                DefaultMutableTreeNode nNode = new DefaultMutableTreeNode(name);
+                nNode.setAllowsChildren(true);
                 TreePath parentPath = m_tree.getSelectionPath();
 
                 //取得新節點的父節點
@@ -445,11 +411,11 @@ public class Url_img_dow extends JFrame implements ActionListener  {
                 }
 
                 //由DefaultTreeModel的insertNodeInto（）方法增加新節點
-                m_model.insertNodeInto(newNode, parentNode, parentNode.getChildCount());
-                root.add(newNode);
+                m_model.insertNodeInto(nNode, parentNode, parentNode.getChildCount());
+                root.add(nNode);
                 //tree的scrollPathToVisible()方法在使Tree會自動展開文件夾以便顯示所加入的新節點。若沒加這行則加入的新節點
                 //會被 包在文件夾中，你必須自行展開文件夾才看得到。
-                m_tree.scrollPathToVisible(new TreePath(newNode.getPath()));
+                m_tree.scrollPathToVisible(new TreePath(nNode.getPath()));
                 
 
                 m_tree.setSelectionPath(parentPath);
@@ -525,42 +491,65 @@ public class Url_img_dow extends JFrame implements ActionListener  {
     public int readfile(ConcurrentHashMap dict, String filename) throws MalformedURLException {
 
         //圖檔
-        int count = 0;
+        int count = 0, num=0;
         try {
+            
             FileReader fr = new FileReader(filename);
             BufferedReader fin = new BufferedReader(fr);
-            String[] data = new String[1];
-            while (fin.ready()) {
+            String data;
+//            while (fin.ready()) {
+            while(fin.ready()){
                 count++;
-                if (count > data.length) {
-                    String[] temp = data;//把原有的arry 指到temp
-                    data = new String[count];//講原有的宣告成新的並給予新的長度
-                    for (int i = 0; i < temp.length; i++) {
-                        data[i] = temp[i];//把temp值塞到新的
-                        String sp[] = new String[10];
-                        sp = PttGossiping.split_line(data[i], ",");
-                        Putdata(sp[0], sp[1]);
-                        if(filename == "newimgpath.txt" )
-                            NewNode(sp[0]);
-                        
-//                        dict.put(sp[0], sp[1]);
-//                        NewNode(sp[0]);
-//                        System.out.println(show_split_line);
-                    }
-                    //結束後新的arry最後一筆是空的
-                }
-                String str = fin.readLine().trim();
-                data[count - 1] = str;//把新的一筆存到array的最後一筆
-                String[] split_line = data[count - 1].split(",");
-                String show_split_line = "";
-                String sp[] = new String[2];
-                int k = 0;
-                for (String s : split_line) {
-                    show_split_line = show_split_line + "[" + s + "]";
-//                    System.out.println(show_split_line + "," + s);
-                    sp[k++] = s;
-                }
+                num++;
+                data = fin.readLine();
+                System.out.println(data);
+
+//                
+                String sp[] = new String[10];
+                sp = PttGossiping.split_line(data, ",");
+                System.out.println("sp=" + sp[0] + sp[1]);
                 Putdata(sp[0], sp[1]);
+                if (filename == "newimgpath.txt") {
+//                    System.out.println("FUCKFUCK");
+                    NewNode(sp[0]);
+                }
+                
+//                if (filename == "newimgpath.txt") {
+//                    NewNode(sp[0]);
+//                    num++;
+//                }
+//                NewNode(sp[0]);
+//                if (count > data.length) {
+//                    String[] temp = data;//把原有的arry 指到temp
+//                    data = new String[count];//講原有的宣告成新的並給予新的長度
+//                    for (int i = 0; i < temp.length; i++) {
+//                        data[i] = temp[i];//把temp值塞到新的
+//                        String sp[] = new String[10];
+//                        sp = PttGossiping.split_line(data[i], ",");
+//                        Putdata(sp[0], sp[1]);
+//                        if(filename == "newimgpath.txt"){
+//                            NewNode(sp[0]);
+//                            num++;
+//                        }
+//                        
+////                        dict.put(sp[0], sp[1]);
+////                        NewNode(sp[0]);
+////                        System.out.println(show_split_line);
+//                    }
+//                    //結束後新的arry最後一筆是空的
+//                }
+//                String str = fin.readLine().trim();
+//                data[count - 1] = str;//把新的一筆存到array的最後一筆
+//                String[] split_line = data[count - 1].split(",");
+//                String show_split_line = "";
+//                String sp[] = new String[2];
+//                int k = 0;
+//                for (String s : split_line) {
+//                    show_split_line = show_split_line + "[" + s + "]";
+////                    System.out.println(show_split_line + "," + s);
+//                    sp[k++] = s;
+//                }
+//                Putdata(sp[0], sp[1]);
 //                dict.put(sp[0], sp[1]);
 
             }
@@ -570,7 +559,8 @@ public class Url_img_dow extends JFrame implements ActionListener  {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
+        System.out.println("num=" + num++);
         return count;
 
     }
@@ -593,7 +583,7 @@ public class Url_img_dow extends JFrame implements ActionListener  {
     public void Putdata(String skey, String svalue) {
         if (dict.get(skey) == null) {
             if (skey.indexOf(".jpg") != -1) {
-
+                
                 dict.put(skey, svalue);
             } else {
                 dict.put(skey, "");
@@ -620,7 +610,7 @@ public class Url_img_dow extends JFrame implements ActionListener  {
             imgSrc = element.attr("content"); //获取src属性的值(attr代表某個元素的屬性) 
             if (imgSrc.length() > 18) {
                 if ("https://instagram.".equals(imgSrc.substring(0, 18))) {
-                    System.out.println("attr:" + imgSrc);
+                    System.out.println("Get_instagram_imgdown_attr:" + imgSrc);
                     
                     byte[] bimgpath = (filename + ".jpg," + imgSrc+"\n").getBytes();
                     
