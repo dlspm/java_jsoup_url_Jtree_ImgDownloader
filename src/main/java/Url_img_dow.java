@@ -423,8 +423,7 @@ public class Url_img_dow extends JFrame implements ActionListener  {
         }
         
 //        NewNode("Bd-Mw5iBVak.jpg");
-        Putdata(name, "");
-//        Putdata("Bd-Mw5iBVak.jpg", "https://instagram.fkhh1-1.fna.fbcdn.net/vp/7571e60baa52901c56371ff627eb24af/5AEC071A/t51.2885-15/e35/26151420_457673181297052_3050063388802547712_n.jpg");
+        Putdata("Bd-Mw5iBVak.jpg", "https://instagram.fkhh1-1.fna.fbcdn.net/vp/7571e60baa52901c56371ff627eb24af/5AEC071A/t51.2885-15/e35/26151420_457673181297052_3050063388802547712_n.jpg");
 //        dict.put("Bd-Mw5iBVak.jpg", "https://instagram.fkhh1-1.fna.fbcdn.net/vp/7571e60baa52901c56371ff627eb24af/5AEC071A/t51.2885-15/e35/26151420_457673181297052_3050063388802547712_n.jpg");
 
     
@@ -526,14 +525,14 @@ public class Url_img_dow extends JFrame implements ActionListener  {
     public int readfile(ConcurrentHashMap dict, String filename) throws MalformedURLException {
 
         //圖檔
-        int count = 0, num=0;
+        int count = 0;
         try {
             FileReader fr = new FileReader(filename);
             BufferedReader fin = new BufferedReader(fr);
             String[] data = new String[1];
             while (fin.ready()) {
                 count++;
-                if (count >= data.length) {
+                if (count > data.length) {
                     String[] temp = data;//把原有的arry 指到temp
                     data = new String[count];//講原有的宣告成新的並給予新的長度
                     for (int i = 0; i < temp.length; i++) {
@@ -541,10 +540,8 @@ public class Url_img_dow extends JFrame implements ActionListener  {
                         String sp[] = new String[10];
                         sp = PttGossiping.split_line(data[i], ",");
                         Putdata(sp[0], sp[1]);
-//                        if(filename == "newimgpath.txt" && dict.get(sp[0]) == null){
-//                            NewNode(sp[0]);
-//                            num++;
-//                        }
+                        if(filename == "newimgpath.txt" )
+                            NewNode(sp[0]);
                         
 //                        dict.put(sp[0], sp[1]);
 //                        NewNode(sp[0]);
@@ -596,21 +593,19 @@ public class Url_img_dow extends JFrame implements ActionListener  {
     public void Putdata(String skey, String svalue) {
         if (dict.get(skey) == null) {
             if (skey.indexOf(".jpg") != -1) {
-                NewNode(skey);
+
                 dict.put(skey, svalue);
             } else {
                 dict.put(skey, "");
             }
-        }else{
-            System.out.println("已經載過");
         }
 
     }
     
     
-    public static void main(String[] args) throws MalformedURLException, IOException {
-        new Url_img_dow("Test Swing Jtree v2").init();
-    }
+//    public static void main(String[] args) throws MalformedURLException, IOException {
+//        new Url_img_dow("Test Swing Jtree v2").init();
+//    }
     
     
      public static String Get_instagram_imgdown(String imgsrc, String filename, FileOutputStream out) throws IOException{

@@ -43,14 +43,14 @@ import org.jsoup.select.Elements;
 
 
 public class Facebook {
-    public static void main(String[] args) throws IOException {
-        connect();//connect the website,
-//        System.out.print(doc.outerHtml());//in the wole html file, i can find the tag <p>
-//        Elements newsHeadlines = doc.select("p");//nothing
-//        doc.getElementsByTag("p");//nothing either
-//        String oldEleStr = newsHeadlines.text();
-//        System.out.println(oldEleStr);//nothing
-    }
+//    public static void main(String[] args) throws IOException {
+//        connect();//connect the website,
+////        System.out.print(doc.outerHtml());//in the wole html file, i can find the tag <p>
+////        Elements newsHeadlines = doc.select("p");//nothing
+////        doc.getElementsByTag("p");//nothing either
+////        String oldEleStr = newsHeadlines.text();
+////        System.out.println(oldEleStr);//nothing
+//    }
 
     static void connect() throws IOException {
         Connection.Response res = Jsoup.connect("https://www.facebook.com/login.php")
